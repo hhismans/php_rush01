@@ -108,6 +108,7 @@ function mapPutPixel(x, y, color) {
             }
         }
 
+        {
         model = new Array();
         model.push(new Array());
         model[0].push("###########");
@@ -141,66 +142,63 @@ function mapPutPixel(x, y, color) {
         model[2].push("###########");
         model[2].push("   #####   ");
         model[2].push("   #####   ");
-        model[2].push("   #####   ");
-       // drawShip(1,3,model, 'blue', DOWN);
-        //drawShip(5,3,model, 'blue', UP);
-        //drawShip(9,3,model, 'blue', LEFT);
-        //drawShip(14,3,model, 'blue', RIGHT);
+        model[2].push("   #####   ");} // model
 
-        ship_coord = new Array();
+        ships_data = new Array();
         $.ajax({
             url:"action.php?action=getship",
             type:"get",
             success:function(msg){
-                ship_coord = JSON.parse(msg);
-                ship_coord['dir'] = DOWN;
-                console.log("rpout", ship_coord, ship_coord['x'], ship_coord['type']);
-                drawShip(ship_coord['x'],ship_coord['y'], model[ship_coord['type']], 'blue', ship_coord['dir']);
+                ships_data = JSON.parse(msg);
+               console.log ("SHIP COORD ",ships_data);
+                //ships_data['dir'] = DOWN;
+                //console.log("SHIP COORD", ships_data, ships_data['x'], ships_data['type']);
+                drawShip(ships_data['x'],ships_data['y'], model[ships_data['type']], 'blue', ships_data['dir']);
             }
         });
 
         $('#left_button').click(function(){
             console.log('left click');
-            eraseShip(ship_coord['x'], ship_coord['y'],  model[ship_coord['type']] ,ship_coord['dir']);
-            ship_coord['dir'] = (ship_coord['dir'] + 3) % 4;
-            drawShip(ship_coord['x'], ship_coord['y'],  model[ship_coord['type']], 'blue', ship_coord['dir']);
+            eraseShip(ships_data['x'], ships_data['y'],  model[ships_data['type']] ,ships_data['dir']);
+            ships_data['dir'] = (ships_data['dir'] + 3) % 4;
+            drawShip(ships_data['x'], ships_data['y'],  model[ships_data['type']], 'blue', ships_data['dir']);
            /* $.get('test.php?move=left', function(data, status) {
                 alert("data : " + data + "\nStatus" + status);
             })*/
         });
 
         $('#right_button').click(function(){
-            eraseShip(ship_coord['x'], ship_coord['y'],  model[ship_coord['type']],ship_coord['dir']);
-            ship_coord['dir'] = (ship_coord['dir'] + 1) % 4;
-            drawShip(ship_coord['x'], ship_coord['y'],  model[ship_coord['type']], 'blue', ship_coord['dir']);
+            eraseShip(ships_data['x'], ships_data['y'],  model[ships_data['type']],ships_data['dir']);
+            ships_data['dir'] = (ships_data['dir'] + 1) % 4;
+            drawShip(ships_data['x'], ships_data['y'],  model[ships_data['type']], 'blue', ships_data['dir']);
             /*$.get('test.php?move=right', function(data, status) {
                 alert("data : " + data + "\nStatus" + status);
             })*/
         });
 
         $('#up_button').click(function(){
-            eraseShip(ship_coord['x'], ship_coord['y'],  model[ship_coord['type']],ship_coord['dir']);
-            switch (ship_coord['dir']){
-                case UP: ship_coord['y']--;break;
-                case DOWN: ship_coord['y']++;break;
-                case LEFT: ship_coord['x']--;break;
-                case RIGHT: ship_coord['x']++;break;
+            eraseShip(ships_data['x'], ships_data['y'],  model[ships_data['type']],ships_data['dir']);
+            switch (ships_data['dir']){
+                case UP: ships_data['y']--;break;
+                case DOWN: ships_data['y']++;break;
+                case LEFT: ships_data['x']--;break;
+                case RIGHT: ships_data['x']++;break;
             }
-            drawShip(ship_coord['x'], ship_coord['y'], model[ship_coord['type']], 'blue', ship_coord['dir']);
+            drawShip(ships_data['x'], ships_data['y'], model[ships_data['type']], 'blue', ships_data['dir']);
 
             $.get('test.php?move=up', function(data, status) {
                 alert("data : " + data + "\nStatus" + status);
             })
         });
 
-        $('#down_button').click(function(){
+        $('#submit_button').click(function(){
             $.get('test.php?move=down', function(data, status) {
                 alert("data : " + data + "\nStatus" + status);
             })
         });
 
         $('#my-span').click(function(){
-            console.log(ship_coord);
+            console.log(ships_data);
         });
 
 });
@@ -251,7 +249,7 @@ echo "<h3>".$_SESSION["login"]." VS j2</h3>
 		<input id ="left_button" class="left" type="submit" value="LEFT" name="move">
 		<input id="right_button" type="submit" value="RIGHT" name="move">
 	</div>
-	<input id="down_button" type="submit" value="DOWN" name="move">
+	<input id="submit_button" type="submit" value="SUBMIT" name="move">
 	</div>
 <div id="div_chat">
 	<iframe name='chat' src='chat.php' width="100%" height="100%"></iframe>
