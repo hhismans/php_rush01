@@ -1,6 +1,8 @@
-table{
+table
+{
+	float: left;
 	height:80%;
-	width:100%;
+	width:80%;
 }
 
 tr:nth-child(even) {background: #eeeeee;}
@@ -11,6 +13,9 @@ tr:nth-child(odd) {background: #eeeeee;}
 	display:flex;
 	flex-direction: row;
 	flex-wrap:nowrap;
+	float: left;
+	height: 100%;
+	width: 80%;
 }
 
 .flex-row{
@@ -31,4 +36,43 @@ tr:nth-child(odd) {background: #eeeeee;}
 	flex:1;
 	display:flex;
 	flex-direction:row;
+}
+
+#stat
+{
+	background-color: lightgreen;
+	float: right;
+	height:80%;
+	width:20%;
+}
+
+#stat h3
+{
+	text-align: center;
+}
+
+#stat p
+{
+	margin-left: 15px;
+}
+
+#div_chat
+{
+	float: right;
+	width: 20%;
+}
+#div_chat #msg
+{
+	width: 85%;
+}
+
+#chat_ok
+{
+	width: 15%;
+}
+
+#foot
+{
+	width: 100%;
+	height: 20%;
 }
