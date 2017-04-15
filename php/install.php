@@ -38,11 +38,20 @@ function table_ship($mysqli)
 }
 
 
+function table_weapon($mysqli)
+{
+	$req = "CREATE TABLE `db_rush01`.`wpn` ( `wpn_id` INT NOT NULL AUTO_INCREMENT , `wpn_name` VARCHAR(255) NOT NULL , `wpn_ scp_l` INT NOT NULL , `wpn_ scp_m` INT NOT NULL , `wpn_ scp_h` INT NOT NULL , `wpn_dir` INT NOT NULL , `wpn_dps` INT NOT NULL, PRIMARY KEY (`wpn_id`) )";
+	if ($mysqli->query($req) == false)
+		return (1);
+	return (0);
+}
 
 function create_database()
 {
 	$mysqli = mysqli_connect('localhost', 'root', 'root', "db_rush01");
 	if (table_user($mysqli) == 1)
+		return (1);
+	if (table_weapon($mysqli) == 1)
 		return (1);
 	if (table_chat($mysqli) == 1)
 		return (1);
