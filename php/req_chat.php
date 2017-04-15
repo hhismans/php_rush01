@@ -6,7 +6,7 @@ if ($_SESSION["id"] != "")
 {
 	if (isset($_GET["get"]))
 	{
-		$req = $mysqli->query("SELECT `chat_text` FROM `chat`");
+		$req = $mysqli->query("SELECT `chat_text` FROM `chat` ORDER BY `chat_id` DESC");
 		while ($row = $req->fetch_array())
 		{
 			echo $row["chat_text"]."<br />";
