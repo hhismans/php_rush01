@@ -8,7 +8,7 @@ if ($_SESSION["id"] != "")
     echo "<html>
 	    <linK rel='stylesheet' type='text/css' href='../css/style.css'>
 	    <script src='../js/jquery-3.2.1.min.js'></script>
-		<body>
+		<body style=\"margin-bottom:0px\">
 		<center><h1>bonjour ".$_SESSION["login"]."<h1></center>
 		<iframe name='chat' src='chat.php' width='100%' height='550px'></iframe>
 		<iframe name='speak' src='speak.php' width='100%' height='50px'></iframe>";
@@ -45,11 +45,38 @@ $_SESSION['app']->dumpHtml();
     const RIGHT = 3;
     $(document).ready(function() {
 
-        function eraseShip(x, y, model) {
+        function eraseShip(x, y, model, dir) {
             x+=1;
-            for (i = 0; i < model.length; i++) {
-                for (j = 0; j < model[i].length; j++) {
-                   mapPutPixel(x - Math.floor((model[0].length / 2)) + j, y - Math.floor((model.length / 2)) + i, '#eeeeee');
+            if (dir == DOWN) {
+                for (i = 0; i < model.length; i++) {
+                    for (j = 0; j < model[i].length; j++) {
+                        if (model[i][j] == '#')
+                            mapPutPixel(x - Math.floor((model[0].length / 2)) + j, y - Math.floor((model.length / 2)) + i, '#eeeeee');
+                    }
+                }
+            }
+            if (dir == UP) {
+                for (i = 0; i < model.length; i++) {
+                    for (j = 0; j < model[i].length; j++) {
+                        if (model[i][j] == '#')
+                            mapPutPixel(x + Math.floor((model[0].length / 2)) - j, y + Math.floor((model.length / 2)) - i, '#eeeeee');
+                    }
+                }
+            }
+            if (dir == LEFT) {
+                for (i = 0; i < model.length; i++) {
+                    for (j = 0; j < model[i].length; j++) {
+                        if (model[i][j] == '#')
+                            mapPutPixel(x + Math.floor((model.length / 2)) - i, y + Math.floor((model[0].length / 2)) - j, '#eeeeee');
+                    }
+                }
+            }
+            if (dir == RIGHT) {
+                for (i = 0; i < model.length; i++) {
+                    for (j = 0; j < model[i].length; j++) {
+                        if (model[i][j] == '#')
+                            mapPutPixel(x - Math.floor((model.length / 2)) + i, y - Math.floor((model[0].length / 2)) + j, '#eeeeee');
+                    }
                 }
             }
         }
@@ -90,9 +117,22 @@ $_SESSION['app']->dumpHtml();
         }
 
         model = new Array();
-        model.push("###");
-        model.push(" # ");
-        model.push(" # ");
+        model.push("###########");
+        model.push("###########");
+        model.push("###########");
+        model.push("   #####   ");
+        model.push("   #####   ");
+        model.push("   #####   ");
+        model.push("   #####   ");
+        model.push("   #####   ");
+        model.push("   #####   ");
+        model.push("   #####   ");
+        model.push("  #######  ");
+        model.push("  #######  ");
+        model.push("  #######  ");
+        model.push("  #######  ");
+        model.push("  #######  ");
+        model.push("  #######  ");
 
        // drawShip(1,3,model, 'blue', DOWN);
         //drawShip(5,3,model, 'blue', UP);
@@ -105,7 +145,6 @@ $_SESSION['app']->dumpHtml();
             type:"get",
             success:function(msg){
                 ship_coord = JSON.parse(msg);
-                drawShip(14,3,model, 'blue', RIGHT);
                 ship_coord['dir'] = DOWN;
                 console.log("rpout", ship_coord, ship_coord['x']);
                 drawShip(ship_coord['x'],ship_coord['y'],model, 'blue', ship_coord['dir']);
@@ -113,7 +152,8 @@ $_SESSION['app']->dumpHtml();
         });
 
         $('#left_button').click(function(){
-            eraseShip(ship_coord['x'], ship_coord['y'], model);
+            console.log('left click');
+            eraseShip(ship_coord['x'], ship_coord['y'], model,ship_coord['dir']);
             ship_coord['dir'] = (ship_coord['dir'] + 3) % 4;
             drawShip(ship_coord['x'], ship_coord['y'], model, 'blue', ship_coord['dir']);
            /* $.get('test.php?move=left', function(data, status) {
@@ -122,7 +162,7 @@ $_SESSION['app']->dumpHtml();
         });
 
         $('#right_button').click(function(){
-            eraseShip(ship_coord['x'], ship_coord['y'], model);
+            eraseShip(ship_coord['x'], ship_coord['y'], model,ship_coord['dir']);
             ship_coord['dir'] = (ship_coord['dir'] + 1) % 4;
             drawShip(ship_coord['x'], ship_coord['y'], model, 'blue', ship_coord['dir']);
             /*$.get('test.php?move=right', function(data, status) {
@@ -131,6 +171,15 @@ $_SESSION['app']->dumpHtml();
         });
 
         $('#up_button').click(function(){
+            eraseShip(ship_coord['x'], ship_coord['y'], model,ship_coord['dir']);
+            switch (ship_coord['dir']){
+                case UP: ship_coord['y']--;break;
+                case DOWN: ship_coord['y']++;break;
+                case LEFT: ship_coord['x']--;break;
+                case RIGHT: ship_coord['x']++;break;
+            }
+            drawShip(ship_coord['x'], ship_coord['y'], model, 'blue', ship_coord['dir']);
+
             $.get('test.php?move=up', function(data, status) {
                 alert("data : " + data + "\nStatus" + status);
             })
