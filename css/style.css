@@ -1,0 +1,34 @@
+table{
+	height:80%;
+	width:100%;
+}
+
+tr:nth-child(even) {background: #eeeeee;}
+tr:nth-child(odd) {background: #eeeeee;}
+
+.flex-container{
+	background: pink;
+	display:flex;
+	flex-direction: row;
+	flex-wrap:nowrap;
+}
+
+.flex-row{
+	flex-direction : row;
+}
+
+.flex-column{
+	flex-direction : column;
+}
+
+
+.ship {
+	background: pink;
+}
+
+.flex-body{
+	background: pink;
+	flex:1;
+	display:flex;
+	flex-direction:row;
+}
