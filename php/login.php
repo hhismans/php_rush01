@@ -9,10 +9,13 @@ if ($_SESSION["id"] == "")
 	header("location: ../index.php");
 	return;
 }
-	//$var = json_decode(file_get_contents("data.json"));
-    //$ship = new miniship(array('dataObj' => $var));
-	$_SESSION['app'] = new App(array());
-	$_SESSION['app']->dumpHtml();
+?>
+
+<?php
+//$var = json_decode(file_get_contents("data.json"));
+//$ship = new miniship(array('dataObj' => $var));
+$_SESSION['app'] = new App(array());
+$_SESSION['app']->dumpHtml();
 ?>
 <html>
 <link rel='stylesheet' type='text/css' href='../css/style.css'></link>
@@ -25,48 +28,117 @@ function mapPutPixel(x, y, color) {
     $(str).css('background', color);
 }
 
-function moveShip(){
+    function moveShip(){
 
-}
+    }
 
-$(document).ready(function(){
-    ship_coord = new Array();
-    $.ajax({
-        url:"action.php?action=getship",
-        type:"get",
-        success:function(msg){
-            ship_coord = JSON.parse(msg);
-            console.log(msg);
+    const DOWN = 0;
+    const LEFT = 1;
+    const UP = 2;
+    const RIGHT = 3;
+    $(document).ready(function() {
+
+        function eraseShip(x, y, model) {
+            x+=1;
+            for (i = 0; i < model.length; i++) {
+                for (j = 0; j < model[i].length; j++) {
+                   mapPutPixel(x - Math.floor((model[0].length / 2)) + j, y - Math.floor((model.length / 2)) + i, '#eeeeee');
+                }
+            }
         }
-    });
+        function drawShip(x, y, model, color, dir) {
+            x+=1;
+            if (dir == DOWN) {
+                for (i = 0; i < model.length; i++) {
+                    for (j = 0; j < model[i].length; j++) {
+                        if (model[i][j] == '#')
+                            mapPutPixel(x - Math.floor((model[0].length / 2)) + j, y - Math.floor((model.length / 2)) + i, color);
+                    }
+                }
+            }
+            if (dir == UP) {
+                for (i = 0; i < model.length; i++) {
+                    for (j = 0; j < model[i].length; j++) {
+                        if (model[i][j] == '#')
+                            mapPutPixel(x + Math.floor((model[0].length / 2)) - j, y + Math.floor((model.length / 2)) - i, color);
+                    }
+                }
+            }
+            if (dir == LEFT) {
+                for (i = 0; i < model.length; i++) {
+                    for (j = 0; j < model[i].length; j++) {
+                        if (model[i][j] == '#')
+                            mapPutPixel(x + Math.floor((model.length / 2)) - i, y + Math.floor((model[0].length / 2)) - j, color);
+                    }
+                }
+            }
+            if (dir == RIGHT) {
+                for (i = 0; i < model.length; i++) {
+                    for (j = 0; j < model[i].length; j++) {
+                        if (model[i][j] == '#')
+                            mapPutPixel(x - Math.floor((model.length / 2)) + i, y - Math.floor((model[0].length / 2)) + j, color);
+                    }
+                }
+            }
+        }
 
-    $('#left_button').click(function(){
-		$.get('test.php?move=left', function(data, status) {
-			alert("data : " + data + "\nStatus" + status);
-		})
-	});
+        model = new Array();
+        model.push("###");
+        model.push(" # ");
+        model.push(" # ");
 
-	$('#right_button').click(function(){
-		$.get('test.php?move=right', function(data, status) {
-			alert("data : " + data + "\nStatus" + status);
-		})
-	});
+       // drawShip(1,3,model, 'blue', DOWN);
+        //drawShip(5,3,model, 'blue', UP);
+        //drawShip(9,3,model, 'blue', LEFT);
+        //drawShip(14,3,model, 'blue', RIGHT);
 
-	$('#up_button').click(function(){
-		$.get('test.php?move=up', function(data, status) {
-			alert("data : " + data + "\nStatus" + status);
-		})
-	});
+        ship_coord = new Array();
+        $.ajax({
+            url:"action.php?action=getship",
+            type:"get",
+            success:function(msg){
+                ship_coord = JSON.parse(msg);
+                drawShip(14,3,model, 'blue', RIGHT);
+                ship_coord['dir'] = DOWN;
+                console.log("rpout", ship_coord, ship_coord['x']);
+                drawShip(ship_coord['x'],ship_coord['y'],model, 'blue', ship_coord['dir']);
+            }
+        });
 
-	$('#down_button').click(function(){
-		$.get('test.php?move=down', function(data, status) {
-			alert("data : " + data + "\nStatus" + status);
-		})
-	});
+        $('#left_button').click(function(){
+            eraseShip(ship_coord['x'], ship_coord['y'], model);
+            ship_coord['dir'] = (ship_coord['dir'] + 3) % 4;
+            drawShip(ship_coord['x'], ship_coord['y'], model, 'blue', ship_coord['dir']);
+           /* $.get('test.php?move=left', function(data, status) {
+                alert("data : " + data + "\nStatus" + status);
+            })*/
+        });
 
-	$('#my-span').click(function(){
-        console.log(ship_coord);
-	});
+        $('#right_button').click(function(){
+            eraseShip(ship_coord['x'], ship_coord['y'], model);
+            ship_coord['dir'] = (ship_coord['dir'] + 1) % 4;
+            drawShip(ship_coord['x'], ship_coord['y'], model, 'blue', ship_coord['dir']);
+            /*$.get('test.php?move=right', function(data, status) {
+                alert("data : " + data + "\nStatus" + status);
+            })*/
+        });
+
+        $('#up_button').click(function(){
+            $.get('test.php?move=up', function(data, status) {
+                alert("data : " + data + "\nStatus" + status);
+            })
+        });
+
+        $('#down_button').click(function(){
+            $.get('test.php?move=down', function(data, status) {
+                alert("data : " + data + "\nStatus" + status);
+            })
+        });
+
+        $('#my-span').click(function(){
+            console.log(ship_coord);
+        });
+
 });
 
 function ecri()
@@ -116,7 +188,7 @@ echo "<h3>".$_SESSION["login"]." VS j2</h3>
 		<input id="right_button" type="submit" value="RIGHT" name="move">
 	</div>
 	<input id="down_button" type="submit" value="DOWN" name="move">
-</div>
+	</div>
 <div id="div_chat">
 	<iframe name='chat' src='chat.php' width="100%" height="100%"></iframe>
 	<div id="div_text"><input type='text' id='msg' value="" align="right"/><input type='submit' id="chat_ok" onclick="ecri()" value='OK' /></div>
