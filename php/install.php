@@ -46,6 +46,8 @@ function create_database()
 		return (1);
 	if (table_chat($mysqli) == 1)
 		return (1);
+	if (table_game($mysqli) == 1)
+		return (1);
 	if (table_ship($mysqli) == 1)
 		return (1);
 	return (0);
