@@ -109,23 +109,39 @@ function mapPutPixel(x, y, color) {
         }
 
         model = new Array();
-        model.push("###########");
-        model.push("###########");
-        model.push("###########");
-        model.push("   #####   ");
-        model.push("   #####   ");
-        model.push("   #####   ");
-        model.push("   #####   ");
-        model.push("   #####   ");
-        model.push("   #####   ");
-        model.push("   #####   ");
-        model.push("  #######  ");
-        model.push("  #######  ");
-        model.push("  #######  ");
-        model.push("  #######  ");
-        model.push("  #######  ");
-        model.push("  #######  ");
+        model.push(new Array());
+        model[0].push("###########");
+        model[0].push("###########");
+        model[0].push("###########");
+        model[0].push("   #####   ");
+        model[0].push("   #####   ");
+        model[0].push("   #####   ");
+        model[0].push("   #####   ");
+        model[0].push("   #####   ");
+        model[0].push("   #####   ");
+        model[0].push("   #####   ");
+        model[0].push("  #######  ");
+        model[0].push("  #######  ");
+        model[0].push("  #######  ");
+        model[0].push("  #######  ");
+        model[0].push("  #######  ");
+        model[0].push("  #######  ");
 
+        model.push(new Array());
+        model[1].push("###########");
+        model[1].push("###########");
+        model[1].push("###########");
+        model[1].push("   #####   ");
+        model[1].push("   #####   ");
+        model[1].push("   #####   ");
+
+        model.push(new Array());
+        model[2].push("###########");
+        model[2].push("###########");
+        model[2].push("###########");
+        model[2].push("   #####   ");
+        model[2].push("   #####   ");
+        model[2].push("   #####   ");
        // drawShip(1,3,model, 'blue', DOWN);
         //drawShip(5,3,model, 'blue', UP);
         //drawShip(9,3,model, 'blue', LEFT);
@@ -138,39 +154,39 @@ function mapPutPixel(x, y, color) {
             success:function(msg){
                 ship_coord = JSON.parse(msg);
                 ship_coord['dir'] = DOWN;
-                console.log("rpout", ship_coord, ship_coord['x']);
-                drawShip(ship_coord['x'],ship_coord['y'],model, 'blue', ship_coord['dir']);
+                console.log("rpout", ship_coord, ship_coord['x'], ship_coord['type']);
+                drawShip(ship_coord['x'],ship_coord['y'], model[ship_coord['type']], 'blue', ship_coord['dir']);
             }
         });
 
         $('#left_button').click(function(){
             console.log('left click');
-            eraseShip(ship_coord['x'], ship_coord['y'], model,ship_coord['dir']);
+            eraseShip(ship_coord['x'], ship_coord['y'],  model[ship_coord['type']] ,ship_coord['dir']);
             ship_coord['dir'] = (ship_coord['dir'] + 3) % 4;
-            drawShip(ship_coord['x'], ship_coord['y'], model, 'blue', ship_coord['dir']);
+            drawShip(ship_coord['x'], ship_coord['y'],  model[ship_coord['type']], 'blue', ship_coord['dir']);
            /* $.get('test.php?move=left', function(data, status) {
                 alert("data : " + data + "\nStatus" + status);
             })*/
         });
 
         $('#right_button').click(function(){
-            eraseShip(ship_coord['x'], ship_coord['y'], model,ship_coord['dir']);
+            eraseShip(ship_coord['x'], ship_coord['y'],  model[ship_coord['type']],ship_coord['dir']);
             ship_coord['dir'] = (ship_coord['dir'] + 1) % 4;
-            drawShip(ship_coord['x'], ship_coord['y'], model, 'blue', ship_coord['dir']);
+            drawShip(ship_coord['x'], ship_coord['y'],  model[ship_coord['type']], 'blue', ship_coord['dir']);
             /*$.get('test.php?move=right', function(data, status) {
                 alert("data : " + data + "\nStatus" + status);
             })*/
         });
 
         $('#up_button').click(function(){
-            eraseShip(ship_coord['x'], ship_coord['y'], model,ship_coord['dir']);
+            eraseShip(ship_coord['x'], ship_coord['y'],  model[ship_coord['type']],ship_coord['dir']);
             switch (ship_coord['dir']){
                 case UP: ship_coord['y']--;break;
                 case DOWN: ship_coord['y']++;break;
                 case LEFT: ship_coord['x']--;break;
                 case RIGHT: ship_coord['x']++;break;
             }
-            drawShip(ship_coord['x'], ship_coord['y'], model, 'blue', ship_coord['dir']);
+            drawShip(ship_coord['x'], ship_coord['y'], model[ship_coord['type']], 'blue', ship_coord['dir']);
 
             $.get('test.php?move=up', function(data, status) {
                 alert("data : " + data + "\nStatus" + status);
@@ -211,9 +227,9 @@ echo "<h3>".$_SESSION["login"]." VS j2</h3>
 <h3>ship selectioner</h3>
 <p>black pearl</p>
 <lu>
-	<li>cordoner x : 2</li>
-	<li>cordoner y : 2</li>
-	<li>pst coque : 10</li>
+	<li id='coordx'>cordoner x : 2</li>
+	<li id='coordy'>cordoner y : 2</li>
+	<li id='ptcoque'>pst coque : 10</li>
 	<li>bouclier : 5</li>
 	<li>puisanse moteur : 2</li>
 	<li>vitese : 2</li>

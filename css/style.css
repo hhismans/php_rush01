@@ -3,10 +3,10 @@ table
 	float: left;
 	height:80%;
 	width:80%;
+	background: #EEEEEE;
 }
 
-tr:nth-child(even) {background: #eeeeee;}
-tr:nth-child(odd) {background: #eeeeee;}
+tr { background: lightblue;}
 
 .flex-container{
 	background: pink;
@@ -32,7 +32,7 @@ tr:nth-child(odd) {background: #eeeeee;}
 }
 
 .flex-body{
-	background: pink;
+	background: lightgrey;
 	flex:1;
 	display:flex;
 	flex-direction:row;
