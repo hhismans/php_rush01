@@ -18,25 +18,23 @@ $(document).ready(function() {
 
     //LEFT BUTTON
     $('#left_button').click(function(){
+        console.log ('LEFTCLICK BEFORE DIR:', currentShip['ship_dir']);
         eraseShip(currentShip['ship_pos_x'],currentShip['ship_pos_y'], model[currentShip['ship_type']] , currentShip['ship_dir']);
         currentShip['ship_dir'] = (currentShip['ship_dir'] + 3) % 4;
         drawShip(currentShip['ship_pos_x'], currentShip['ship_pos_y'], model[currentShip['ship_type']], currentShip['ship_color'], currentShip['ship_dir']);
-        $.ajax({
-            url:"action.php",
-            type:"post",
-            data:parseArrayToPost(currentShip, "ship"),
-            success:function(msg){
-                console.log ("HERE IS RESULT ",msg);
-            }
-        });
+        console.log ('LEFTCLICK BEFORE DIR:', currentShip['ship_dir']);
+
     });
 
     //RUGHT BUTTON
     $('#right_button').click(function(){
+        console.log ('RIGHT BEFORE DIR:', currentShip['ship_dir']);
         eraseShip(currentShip['ship_pos_x'],currentShip['ship_pos_y'], model[currentShip['ship_type']] , currentShip['ship_dir']);
         currentShip['ship_dir'] = (currentShip['ship_dir'] + 1) % 4;
         console.log("current ship dir", currentShip['ship_dir']);
         drawShip(currentShip['ship_pos_x'], currentShip['ship_pos_y'], model[currentShip['ship_type']], currentShip['ship_color'], currentShip['ship_dir']);
+        console.log ('RIGHT BEFORE DIR:', currentShip['ship_dir']);
+
     });
 
     function parseArrayToPost(array, type){
@@ -61,14 +59,7 @@ $(document).ready(function() {
             case RIGHT: currentShip['ship_pos_x']++;break;
         }
         //drawShip(ships_data['ship_pos_x'], ships_data['ship_pos_y'], model[ships_data['ship_type']], 'blue',DOWN);// ships_data['dir']);
-        $.ajax({
-            url:"action.php",
-            type:"post",
-            data:parseArrayToPost(currentShip, "ship"),
-            success:function(msg){
-                console.log ("HERE IS RESULT ",msg);
-            }
-        });
+
         drawShip(currentShip['ship_pos_x'], currentShip['ship_pos_y'], model[currentShip['ship_type']], currentShip['ship_color'], currentShip['ship_dir']);
     });
 
@@ -83,6 +74,14 @@ $(document).ready(function() {
             currentShip = ships_data[0];
             console.log('end of ship');
         }
+        $.ajax({
+            url:"action.php",
+            type:"post",
+            data:parseArrayToPost(currentShip, "ship"),
+            success:function(msg){
+                console.log ("HERE IS RESULT ",msg);
+            }
+        });
     });
 
     function eraseShip(x, y, model, dir) {
@@ -218,14 +217,18 @@ $(document).ready(function() {
             type: "get",
             success: function (msg) {
                 ships_data_new = JSON.parse(msg);
+                test = 0;
                 for (a = 0; a < ships_data.length; a++) {
                     if (ships_data_new[a]["nb_jr"] == '0')
                     {
+                        test = 1;
+                        console.log ("AJAX RQUEST DONE");
                         eraseShip(ships_data[a]['ship_pos_x'],ships_data[a]['ship_pos_y'], model[ships_data[a]['ship_type']] , ships_data[a]['ship_dir']);  
                         drawShip(ships_data_new[a]['ship_pos_x'], ships_data_new[a]['ship_pos_y'], model[ships_data_new[a]['ship_type']], ships_data_new[a]['ship_color'], ships_data_new[a]['ship_dir']);
                     }
                 }
-                ships_data = ships_data_new;
+                if (test == 1)
+                    ships_data = ships_data_new;
                 handleData(ships_data);
             }
         });
