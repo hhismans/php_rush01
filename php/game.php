@@ -3,35 +3,35 @@ session_start();
 include('connexion.php');
 if ($_SESSION["id"] == "")
 {
-	header("location: ../index.php");
-	return;
+    header("location: ../index.php");
+    return;
 }
 
 if(isset($_POST["create"]))
 {
-	if ($_SESSION["game_id"] == "")
-	{
-		$mysqli->query("INSERT INTO `game` (`game_user_id1`) VALUES ('".$_SESSION["id"]."')");
-		$_SESSION["game_id"] = $mysqli->insert_id;
-	}
+    if ($_SESSION["game_id"] == "")
+    {
+        $mysqli->query("INSERT INTO `game` (`game_user_id1`) VALUES ('".$_SESSION["id"]."')");
+        $_SESSION["game_id"] = $mysqli->insert_id;
+    }
 }
 else if($_POST["join"] != "")
 {
-	if ($_SESSION["game_id"] == "")
-	{
-		$mysqli->query("UPDATE `game` SET `game_user_id2` = '".$_SESSION['id']."', `game_lock` = '1' WHERE `game_id` = '".$_POST['join']."'");
-		$stmt = $mysqli->prepare("SELECT `game_id` FROM `game` ORDER BY `game_id` DESC LIMIT 1");
-		$stmt->execute();
-		$stmt->bind_result($id);
-		$stmt->fetch();
-		$_SESSION["game_id"] = $id;
+    if ($_SESSION["game_id"] == "")
+    {
+        $mysqli->query("UPDATE `game` SET `game_user_id2` = '".$_SESSION['id']."', `game_lock` = '1' WHERE `game_id` = '".$_POST['join']."'");
+        $stmt = $mysqli->prepare("SELECT `game_id` FROM `game` ORDER BY `game_id` DESC LIMIT 1");
+        $stmt->execute();
+        $stmt->bind_result($id);
+        $stmt->fetch();
+        $_SESSION["game_id"] = $id;
 
-	}
+    }
 }
 if($_SESSION["game_id"] == "")
 {
-	header("location: lobby.php");
-	return;
+    header("location: lobby.php");
+    return;
 }
 require_once('../class/App.class.php');
 $_SESSION['app'] = new App(array());
@@ -44,11 +44,11 @@ $_SESSION['app']->dumpHtml();
 <script src='../js/jquery-3.2.1.min.js'></script>
 <body>
 <script>
-function mapPutPixel(x, y, color) {
-	str = "#line"+ y + " th:nth-child(" + x + ")";
+    function mapPutPixel(x, y, color) {
+        str = "#line"+ y + " th:nth-child(" + x + ")";
 //	console.log(str);
-    $(str).css('background', color);
-}
+        $(str).css('background', color);
+    }
 
     function moveShip(){
 
@@ -67,7 +67,14 @@ function mapPutPixel(x, y, color) {
             eraseShip(currentShip['ship_pos_x'],currentShip['ship_pos_y'], model[currentShip['ship_type']] , currentShip['ship_dir']);
             currentShip['ship_dir'] = (currentShip['ship_dir'] + 3) % 4;
             drawShip(currentShip['ship_pos_x'], currentShip['ship_pos_y'], model[currentShip['ship_type']], currentShip['ship_color'], currentShip['ship_dir']);
-
+            $.ajax({
+                url:"action.php",
+                type:"post",
+                data:parseArrayToPost(currentShip, "ship"),
+                success:function(msg){
+                    console.log ("HERE IS RESULT ",msg);
+                }
+            });
         });
 
         //RUGHT BUTTON
@@ -101,12 +108,12 @@ function mapPutPixel(x, y, color) {
             }
             //drawShip(ships_data['ship_pos_x'], ships_data['ship_pos_y'], model[ships_data['ship_type']], 'blue',DOWN);// ships_data['dir']);
             $.ajax({
-            url:"action.php",
-            type:"post",
-            data:parseArrayToPost(currentShip, "ship"),
-             success:function(msg){
-                 console.log ("HERE IS RESULT ",msg);
-            }
+                url:"action.php",
+                type:"post",
+                data:parseArrayToPost(currentShip, "ship"),
+                success:function(msg){
+                    console.log ("HERE IS RESULT ",msg);
+                }
             });
             drawShip(currentShip['ship_pos_x'], currentShip['ship_pos_y'], model[currentShip['ship_type']], currentShip['ship_color'], currentShip['ship_dir']);
         });
@@ -205,74 +212,74 @@ function mapPutPixel(x, y, color) {
         }
 
         {
-        model = new Array();
-        model.push(new Array());
-        model[0].push("###########");
-        model[0].push("###########");
-        model[0].push("###########");
-        model[0].push("   #####   ");
-        model[0].push("   #####   ");
-        model[0].push("   #####   ");
-        model[0].push("   #####   ");
-        model[0].push("   #####   ");
-        model[0].push("   #####   ");
-        model[0].push("   #####   ");
-        model[0].push("  #######  ");
-        model[0].push("  #######  ");
-        model[0].push("  #######  ");
-        model[0].push("  #######  ");
-        model[0].push("  #######  ");
-        model[0].push("  #######  ");
+            model = new Array();
+            model.push(new Array());
+            model[0].push("###########");
+            model[0].push("###########");
+            model[0].push("###########");
+            model[0].push("   #####   ");
+            model[0].push("   #####   ");
+            model[0].push("   #####   ");
+            model[0].push("   #####   ");
+            model[0].push("   #####   ");
+            model[0].push("   #####   ");
+            model[0].push("   #####   ");
+            model[0].push("  #######  ");
+            model[0].push("  #######  ");
+            model[0].push("  #######  ");
+            model[0].push("  #######  ");
+            model[0].push("  #######  ");
+            model[0].push("  #######  ");
 
-        model.push(new Array());
-        model[1].push("###########");
-        model[1].push("###########");
-        model[1].push("###########");
-        model[1].push("   #####   ");
-        model[1].push("   #####   ");
-        model[1].push("   #####   ");
+            model.push(new Array());
+            model[1].push("###########");
+            model[1].push("###########");
+            model[1].push("###########");
+            model[1].push("   #####   ");
+            model[1].push("   #####   ");
+            model[1].push("   #####   ");
 
-        model.push(new Array());
-        model[2].push("###########");
-        model[2].push("###########");
-        model[2].push("###########");
-        model[2].push("   #####   ");
-        model[2].push("   #####   ");
-        model[2].push("   #####   ");} // model
+            model.push(new Array());
+            model[2].push("###########");
+            model[2].push("###########");
+            model[2].push("###########");
+            model[2].push("   #####   ");
+            model[2].push("   #####   ");
+            model[2].push("   #####   ");} // model
         ships_data = new Array();
-        $.ajax({
-            url:"action.php?action=getship",
-            type:"get",
-            success:function(msg){
-                console.log(msg);
-                ships_data = JSON.parse(msg);
-                currentShip = ships_data[current]; // WARNING CHANGE THIS
-                console.log ("SHIP COORD ",ships_data.length);
-                for (a = 0 ; a < ships_data.length; a++) {
-                    i = 0;
-                    console.log('draw ships');
-                    drawShip(ships_data[a]['ship_pos_x'], ships_data[a]['ship_pos_y'], model[ships_data[a]['ship_type']], ships_data[a]['ship_color'], ships_data[a]['ship_dir']);
-                    console.log('prout', i);
-                }
-            }
-        });
-});
-
-function ecri()
-{
-	$.post("req_php.php?page=game", { text: $("#msg").val()});
-	$("#msg").val("");
-}
-
-$(document).keypress(function (e) {
-                if (e.which == 13 || event.keyCode == 13) {
-                    ecri();
+        function ajaxGetShip(handleData) {
+            $.ajax({
+                url: "action.php?action=getship",
+                type: "get",
+                success: function (msg) {
+                    ships_data = JSON.parse(msg);
+                    for (a = 0; a < ships_data.length; a++) {
+                        drawShip(ships_data[a]['ship_pos_x'], ships_data[a]['ship_pos_y'], model[ships_data[a]['ship_type']], ships_data[a]['ship_color'], ships_data[a]['ship_dir']);
+                    }
+                    handleData(ships_data);
                 }
             });
+        }
+        ajaxGetShip(function (ships_data){
+            currentShip = ships_data[current];
+        });
+    });
+
+    function ecri()
+    {
+        $.post("req_php.php?page=game", { text: $("#msg").val()});
+        $("#msg").val("");
+    }
+
+    $(document).keypress(function (e) {
+        if (e.which == 13 || event.keyCode == 13) {
+            ecri();
+        }
+    });
 </script>
 <div id="stat">
-<?php
-echo "<h3>".$_SESSION["login"]." VS j2</h3>
+    <?php
+    echo "<h3>".$_SESSION["login"]." VS j2</h3>
 <p>".$_SESSION["login"]."</p>
 <lu>
 	<li>nb ship : 5</li>
@@ -301,21 +308,21 @@ echo "<h3>".$_SESSION["login"]." VS j2</h3>
 	<li>dega : 4</li>
 	<li>pp arme : 1</li>
 </ul>";
-?>
+    ?>
 </div>
 <div id="foot">
-<div class="flex-container flex-column">
-	<input id="up_button" class="up" type="submit" value="UP" name="move">
-	<div class="flex-body flex-row">
-		<input id ="left_button" class="left" type="submit" value="LEFT" name="move">
-		<input id="right_button" type="submit" value="RIGHT" name="move">
-	</div>
-	<input id="down_button" type="submit" value="DOWN" name="move">
-</div>
-<div id="div_chat">
-	<iframe name='chat' src='chat.php' width="100%" height="100%"></iframe>
-	<div id="div_text"><input type='text' id='msg' value="" align="right"/><input type='submit' id="chat_ok" onclick="ecri()" value='OK' /></div>
-</div>
+    <div class="flex-container flex-column">
+        <input id="up_button" class="up" type="submit" value="UP" name="move">
+        <div class="flex-body flex-row">
+            <input id ="left_button" class="left" type="submit" value="LEFT" name="move">
+            <input id="right_button" type="submit" value="RIGHT" name="move">
+        </div>
+        <input id="submit_button" type="submit" value="SUBMIT" name="move">
+    </div>
+    <div id="div_chat">
+        <iframe name='chat' src='chat.php' width="100%" height="100%"></iframe>
+        <div id="div_text"><input type='text' id='msg' value="" align="right"/><input type='submit' id="chat_ok" onclick="ecri()" value='OK' /></div>
+    </div>
 </div>
 </body>
 </html>
