@@ -43,7 +43,7 @@ table
 	background: #EEEEEE;
 }
 
-tr { background: lightblue;}
+th { background: lightblue;}
 
 .flex-container{
 	background: pink;

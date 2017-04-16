@@ -23,7 +23,7 @@ $_SESSION['app']->dumpHtml();
 <script>
 function mapPutPixel(x, y, color) {
 	str = "#line"+ y + " th:nth-child(" + x + ")";
-	console.log(str);
+//	console.log(str);
     $(str).css('background', color);
 }
 
@@ -36,14 +36,70 @@ function mapPutPixel(x, y, color) {
     const UP = 2;
     const RIGHT = 3;
     $(document).ready(function() {
+        currentShip = null;
+        current = 0;
+
+        //LEFT BUTTON
+        $('#left_button').click(function(){
+            eraseShip(currentShip['ship_pos_x'],currentShip['ship_pos_y'], model[currentShip['ship_type']] , currentShip['ship_dir']);
+            currentShip['ship_dir'] = (currentShip['ship_dir'] + 3) % 4;
+            drawShip(currentShip['ship_pos_x'], currentShip['ship_pos_y'], model[currentShip['ship_type']], currentShip['ship_color'], currentShip['ship_dir']);
+        });
+
+        //RUGHT BUTTON
+        $('#right_button').click(function(){
+            eraseShip(currentShip['ship_pos_x'],currentShip['ship_pos_y'], model[currentShip['ship_type']] , currentShip['ship_dir']);
+            currentShip['ship_dir'] = (currentShip['ship_dir'] + 1) % 4;
+            console.log("current ship dir", currentShip['ship_dir']);
+            drawShip(currentShip['ship_pos_x'], currentShip['ship_pos_y'], model[currentShip['ship_type']], currentShip['ship_color'], currentShip['ship_dir']);
+        });
+
+        //UP BUTTON
+        $('#up_button').click(function(){
+            eraseShip(currentShip['ship_pos_x'],currentShip['ship_pos_y'], model[currentShip['ship_type']] , currentShip['ship_dir']);
+            console.log ('ship _dir = ', currentShip['ship_dir']);
+            switch (parseInt(currentShip['ship_dir'])){
+                case UP: currentShip['ship_pos_y']--;break;
+                case DOWN: currentShip['ship_pos_y']++;break;
+                case LEFT: currentShip['ship_pos_x']--;break;
+                case RIGHT: currentShip['ship_pos_x']++;break;
+            }
+            //drawShip(ships_data['ship_pos_x'], ships_data['ship_pos_y'], model[ships_data['ship_type']], 'blue',DOWN);// ships_data['dir']);
+            $.ajax({
+            url:"action.php",
+            type:"post",
+            data:"ship=true" + "&x=" + ships_data['x'] + "&y=" + ships_data['y'] + "&ship_id= " + ships_data['ship_id'],
+             success:function(msg){
+                 console.log ("log post",msg);
+            }
+            });
+            drawShip(currentShip['ship_pos_x'], currentShip['ship_pos_y'], model[currentShip['ship_type']], currentShip['ship_color'], currentShip['ship_dir']);
+        });
+
+        //SUBMIT
+        $('#submit_button').click(function(){
+            current+=1;
+            if (current < ships_data.length)
+                currentShip = ships_data[current];
+            else
+            {
+                current=0;
+                currentShip = ships_data[0];
+                console.log('end of ship');
+            }
+        });
+
+
+
 
         function eraseShip(x, y, model, dir) {
-            x+=1;
+            x = parseInt(x) + 1;
+            y = parseInt(y);
             if (dir == DOWN) {
                 for (i = 0; i < model.length; i++) {
                     for (j = 0; j < model[i].length; j++) {
                         if (model[i][j] == '#')
-                            mapPutPixel(x - Math.floor((model[0].length / 2)) + j, y - Math.floor((model.length / 2)) + i, '#eeeeee');
+                            mapPutPixel(x - Math.floor((model[0].length / 2)) + j, y - Math.floor((model.length / 2)) + i, 'lightblue');
                     }
                 }
             }
@@ -51,7 +107,7 @@ function mapPutPixel(x, y, color) {
                 for (i = 0; i < model.length; i++) {
                     for (j = 0; j < model[i].length; j++) {
                         if (model[i][j] == '#')
-                            mapPutPixel(x + Math.floor((model[0].length / 2)) - j, y + Math.floor((model.length / 2)) - i, '#eeeeee');
+                            mapPutPixel(x + Math.floor((model[0].length / 2)) - j, y + Math.floor((model.length / 2)) - i, 'lightblue');
                     }
                 }
             }
@@ -59,7 +115,7 @@ function mapPutPixel(x, y, color) {
                 for (i = 0; i < model.length; i++) {
                     for (j = 0; j < model[i].length; j++) {
                         if (model[i][j] == '#')
-                            mapPutPixel(x + Math.floor((model.length / 2)) - i, y + Math.floor((model[0].length / 2)) - j, '#eeeeee');
+                            mapPutPixel(x + Math.floor((model.length / 2)) - i, y + Math.floor((model[0].length / 2)) - j, 'lightblue');
                     }
                 }
             }
@@ -67,22 +123,27 @@ function mapPutPixel(x, y, color) {
                 for (i = 0; i < model.length; i++) {
                     for (j = 0; j < model[i].length; j++) {
                         if (model[i][j] == '#')
-                            mapPutPixel(x - Math.floor((model.length / 2)) + i, y - Math.floor((model[0].length / 2)) + j, '#eeeeee');
+                            mapPutPixel(x - Math.floor((model.length / 2)) + i, y - Math.floor((model[0].length / 2)) + j, 'lightblue');
                     }
                 }
             }
         }
         function drawShip(x, y, model, color, dir) {
-            x+=1;
+            (x)= parseInt(x) + 1;
+            (y)= parseInt(y);
+            console.log ("in draw ", x, y);
             if (dir == DOWN) {
                 for (i = 0; i < model.length; i++) {
                     for (j = 0; j < model[i].length; j++) {
                         if (model[i][j] == '#')
+                        {
+                            console.log ("in down ", x, y)
                             mapPutPixel(x - Math.floor((model[0].length / 2)) + j, y - Math.floor((model.length / 2)) + i, color);
+                        }
                     }
                 }
             }
-            if (dir == UP) {
+            else if (dir == UP) {
                 for (i = 0; i < model.length; i++) {
                     for (j = 0; j < model[i].length; j++) {
                         if (model[i][j] == '#')
@@ -90,7 +151,7 @@ function mapPutPixel(x, y, color) {
                     }
                 }
             }
-            if (dir == LEFT) {
+            else if (dir == LEFT) {
                 for (i = 0; i < model.length; i++) {
                     for (j = 0; j < model[i].length; j++) {
                         if (model[i][j] == '#')
@@ -98,7 +159,7 @@ function mapPutPixel(x, y, color) {
                     }
                 }
             }
-            if (dir == RIGHT) {
+            else if (dir == RIGHT) {
                 for (i = 0; i < model.length; i++) {
                     for (j = 0; j < model[i].length; j++) {
                         if (model[i][j] == '#')
@@ -108,6 +169,7 @@ function mapPutPixel(x, y, color) {
             }
         }
 
+        {
         model = new Array();
         model.push(new Array());
         model[0].push("###########");
@@ -141,68 +203,24 @@ function mapPutPixel(x, y, color) {
         model[2].push("###########");
         model[2].push("   #####   ");
         model[2].push("   #####   ");
-        model[2].push("   #####   ");
-       // drawShip(1,3,model, 'blue', DOWN);
-        //drawShip(5,3,model, 'blue', UP);
-        //drawShip(9,3,model, 'blue', LEFT);
-        //drawShip(14,3,model, 'blue', RIGHT);
-
-        ship_coord = new Array();
+        model[2].push("   #####   ");} // model
+        ships_data = new Array();
         $.ajax({
             url:"action.php?action=getship",
             type:"get",
             success:function(msg){
-                ship_coord = JSON.parse(msg);
-                ship_coord['dir'] = DOWN;
-                console.log("rpout", ship_coord, ship_coord['x'], ship_coord['type']);
-                drawShip(ship_coord['x'],ship_coord['y'], model[ship_coord['type']], 'blue', ship_coord['dir']);
+                console.log(msg);
+                ships_data = JSON.parse(msg);
+                currentShip = ships_data[current]; // WARNING CHANGE THIS
+                console.log ("SHIP COORD ",ships_data.length);
+                for (a = 0 ; a < ships_data.length; a++) {
+                    i = 0;
+                    console.log('draw ships');
+                    drawShip(ships_data[a]['ship_pos_x'], ships_data[a]['ship_pos_y'], model[ships_data[a]['ship_type']], ships_data[a]['ship_color'], ships_data[a]['ship_dir']);
+                    console.log('prout', i);
+                }
             }
         });
-
-        $('#left_button').click(function(){
-            console.log('left click');
-            eraseShip(ship_coord['x'], ship_coord['y'],  model[ship_coord['type']] ,ship_coord['dir']);
-            ship_coord['dir'] = (ship_coord['dir'] + 3) % 4;
-            drawShip(ship_coord['x'], ship_coord['y'],  model[ship_coord['type']], 'blue', ship_coord['dir']);
-           /* $.get('test.php?move=left', function(data, status) {
-                alert("data : " + data + "\nStatus" + status);
-            })*/
-        });
-
-        $('#right_button').click(function(){
-            eraseShip(ship_coord['x'], ship_coord['y'],  model[ship_coord['type']],ship_coord['dir']);
-            ship_coord['dir'] = (ship_coord['dir'] + 1) % 4;
-            drawShip(ship_coord['x'], ship_coord['y'],  model[ship_coord['type']], 'blue', ship_coord['dir']);
-            /*$.get('test.php?move=right', function(data, status) {
-                alert("data : " + data + "\nStatus" + status);
-            })*/
-        });
-
-        $('#up_button').click(function(){
-            eraseShip(ship_coord['x'], ship_coord['y'],  model[ship_coord['type']],ship_coord['dir']);
-            switch (ship_coord['dir']){
-                case UP: ship_coord['y']--;break;
-                case DOWN: ship_coord['y']++;break;
-                case LEFT: ship_coord['x']--;break;
-                case RIGHT: ship_coord['x']++;break;
-            }
-            drawShip(ship_coord['x'], ship_coord['y'], model[ship_coord['type']], 'blue', ship_coord['dir']);
-
-            $.get('test.php?move=up', function(data, status) {
-                alert("data : " + data + "\nStatus" + status);
-            })
-        });
-
-        $('#down_button').click(function(){
-            $.get('test.php?move=down', function(data, status) {
-                alert("data : " + data + "\nStatus" + status);
-            })
-        });
-
-        $('#my-span').click(function(){
-            console.log(ship_coord);
-        });
-
 });
 
 function ecri()
@@ -210,6 +228,7 @@ function ecri()
 	$.post("req_chat.php", { text: $("#msg").val()});
 	$("#msg").val("");
 }
+
 </script>
 <div id="stat">
 <?php
@@ -251,7 +270,7 @@ echo "<h3>".$_SESSION["login"]." VS j2</h3>
 		<input id ="left_button" class="left" type="submit" value="LEFT" name="move">
 		<input id="right_button" type="submit" value="RIGHT" name="move">
 	</div>
-	<input id="down_button" type="submit" value="DOWN" name="move">
+	<input id="submit_button" type="submit" value="SUBMIT" name="move">
 	</div>
 <div id="div_chat">
 	<iframe name='chat' src='chat.php' width="100%" height="100%"></iframe>
