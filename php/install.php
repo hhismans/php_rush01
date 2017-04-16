@@ -36,7 +36,7 @@ function table_ship($mysqli)
 	if ($mysqli->query($req) == false)
 		return (1);
 	$req = "INSERT INTO `ship` (`ship_id`, `ship_user_id`, `ship_game_id`, `ship_pos_x`, `ship_pos_y`, `ship_pts_coque`, `ship_shield`, `ship_color`, `ship_dir`, `ship_type`, `ship_wpn`) VALUES (NULL, '1', '1', '2', '2', '5', '5', 'red', '0', '1', '1');";
-	mysqli_query($mysqli, $req);
+	//mysqli_query($mysqli, $req);
 	return (0);
 }
 

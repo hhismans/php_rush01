@@ -12,13 +12,13 @@ Class Miniship extends Ship
     {
         parent::__construct($kwargs);
         $this->_size = $this->getSizeFromArgs(3, 3);
-        $this->_type = 2;
-        $this->_name = "Cruel Lerin";
-        $this->_color = "pink";
-        $this->_hp = 3;
-        $this->_sp = 2;
-        $this->_motorPower = 3;
-        $this->_speed = 2;
+        $this->_type = 0;
+        $this->_name = "Cold Escar";
+        $this->_color = "lightgreen";
+        $this->_hp = 4;
+        $this->_sp = 3;
+        $this->_motorPower = 6;
+        $this->_speed = 5;
         return;
     }
 

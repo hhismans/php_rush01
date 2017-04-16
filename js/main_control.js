@@ -164,38 +164,37 @@ $(document).ready(function() {
     {
         model = new Array();
         model.push(new Array());
+        model[0].push("## ## ## ##");
+        model[0].push("## ## ## ##");
         model[0].push("###########");
-        model[0].push("###########");
-        model[0].push("###########");
-        model[0].push("   #####   ");
-        model[0].push("   #####   ");
-        model[0].push("   #####   ");
+        model[0].push("#  #####  #");
+        model[0].push("#  #####  #");
         model[0].push("   #####   ");
         model[0].push("   #####   ");
         model[0].push("   #####   ");
         model[0].push("   #####   ");
         model[0].push("  #######  ");
         model[0].push("  #######  ");
+        model[0].push("  #  #  #  ");
+        model[0].push("  #  #  #  ");
         model[0].push("  #######  ");
-        model[0].push("  #######  ");
-        model[0].push("  #######  ");
-        model[0].push("  #######  ");
+        model[0].push("   #####   ");
 
         model.push(new Array());
         model[1].push("###########");
+        model[1].push("#   ###   #");
         model[1].push("###########");
-        model[1].push("###########");
         model[1].push("   #####   ");
-        model[1].push("   #####   ");
-        model[1].push("   #####   ");
+        model[1].push("   ## ##   ");
+        model[1].push("   #   #   ");
 
         model.push(new Array());
+        model[2].push("##  ###  ##");
+        model[2].push("#   ###   #");
         model[2].push("###########");
-        model[2].push("###########");
-        model[2].push("###########");
-        model[2].push("   #####   ");
-        model[2].push("   #####   ");
-        model[2].push("   #####   ");} // model
+        model[2].push("    ###    ");
+        model[2].push("    ###    ");
+        model[2].push("     #     ");} // model
     ships_data = new Array();
     function ajaxGetShip(handleData) {
         $.ajax({
