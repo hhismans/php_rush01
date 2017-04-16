@@ -32,7 +32,7 @@ function table_game($mysqli)
 
 function table_ship($mysqli)
 {
-	$req = "CREATE TABLE `db_rush01`.`ship` ( `ship_id` INT NOT NULL AUTO_INCREMENT , `ship_user_id` INT NOT NULL , `ship_game_id` INT NOT NULL , `ship_pos_x` INT NOT NULL , `ship_pos_y` INT NOT NULL , `ship_pts_coque` INT NOT NULL , `ship_shield` INT NOT NULL , `ship_color` VARCHAR(255) NOT NULL , `ship_dir` INT NOT NULL, `ship_type` INT NOT NULL , `ship_wpn` INT NOT NULL , PRIMARY KEY (`ship_id`))";
+	$req = "CREATE TABLE `db_rush01`.`ship` ( `ship_id` INT NOT NULL AUTO_INCREMENT , `ship_user_id` INT NOT NULL , `ship_game_id` INT NOT NULL , `ship_pos_x` INT NOT NULL , `ship_pos_y` INT NOT NULL , `ship_pts_coque` INT NOT NULL , `ship_shield` INT NOT NULL , `ship_color` VARCHAR(255) NOT NULL , `ship_dir` INT NOT NULL, `ship_type` INT NOT NULL , `ship_wpn` INT NOT NULL , `ship_refresh` INT NOT NULL DEFAULT '0', PRIMARY KEY (`ship_id`))";
 	if ($mysqli->query($req) == false)
 		return (1);
 	$req = "INSERT INTO `ship` (`ship_id`, `ship_user_id`, `ship_game_id`, `ship_pos_x`, `ship_pos_y`, `ship_pts_coque`, `ship_shield`, `ship_color`, `ship_dir`, `ship_type`, `ship_wpn`) VALUES (NULL, '1', '1', '2', '2', '5', '5', 'red', '0', '1', '1');";
