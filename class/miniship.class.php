@@ -3,8 +3,6 @@ require_once 'Ship.class.php';
 //finalize
 Class Miniship extends Ship
 {
-    private $_type;
-
     static public function doc()
     {
         return (PHP_EOL . file_get_contents('../docs/miniship.doc.txt'));
@@ -15,6 +13,12 @@ Class Miniship extends Ship
         parent::__construct($kwargs);
         $this->_size = $this->getSizeFromArgs(3, 3);
         $this->_type = 0;
+        $this->_name = "Cruel Lerin";
+        $this->_color = "pink";
+        $this->_hp = 3;
+        $this->_sp = 2;
+        $this->_motorPower = 3;
+        $this->_speed = 2;
         return;
     }
 

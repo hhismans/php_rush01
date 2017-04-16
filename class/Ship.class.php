@@ -25,6 +25,7 @@ class Ship implements INorme42 {
 	protected $_speed; // useless
 	protected $_weapon; // maybe use
 	protected $_inertie; // useless
+	protected $_type; // ship type
 
     protected $_mysqli;
 
