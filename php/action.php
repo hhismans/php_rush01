@@ -1,7 +1,7 @@
 <?php
 session_start();
 include('connexion.php');
-require_once ('../class/Ship.class.php');
+require_once ('../class/miniship.class.php');
 if (isset($_GET['action'])) {
     if ($_GET['action'] == "getship") {
 
@@ -21,10 +21,10 @@ if (isset($_GET['action'])) {
 }
 else if (isset($_POST))
 {
-    var_dump($_POST['ship']);
-    exit();
-   if (isset($_POST['ship'])){
-      $ship = new Ship($_POST['ship']);
+   if (isset($_POST['ship']))
+   {
+      $ship = new Ship($_POST);
+      $ship->updateDb($mysqli);
    }
 }
 exit();

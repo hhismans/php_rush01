@@ -18,6 +18,7 @@ class Ship implements INorme42 {
 	protected $_size; // use this
 	protected $_color; // use this
 	protected $_coord; // use this x y dir
+    protected $_dir; // use this x y dir
 	protected $_sp; //  useless
 	protected $_hp; // maybe use
 	protected $_motorPower;  //useless
@@ -40,16 +41,36 @@ class Ship implements INorme42 {
 	function __construct( array $kwargs ){
 
         //SQLICONNECT
-		$this->_mysqli = new mysqli(DB_SERVER, DB_LOGIN, DB_PSW, DB_NAME);
+/*		$this->_mysqli = new mysqli(DB_SERVER, DB_LOGIN, DB_PSW, DB_NAME);
 		if ($this->_mysqli->connect_error){
 			die("Connection Failed in Ship :" . $this->_mysqli->connect_error);
-		}
+		}*/
 
-		//NAME
+
+		//ID
+		array_key_exists( 'ship_id', $kwargs) ? $this->_id = $kwargs['ship_id'] :$this->_id  = -1;
+        //USER_ID
+        array_key_exists( 'ship_user_id', $kwargs ) ? $this->_uid = $kwargs['ship_user_id'] : $this->_uid = 0;
+        //GAME_ID
+        array_key_exists( 'ship_game_id', $kwargs ) ? $this->_gid = $kwargs['ship_game_id'] : $this->_gid = 0;
+		//COORD
+		if (array_key_exists('ship_pos_x', $kwargs) && array_key_exists('ship_pos_y', $kwargs)) {
+            $this->_coord = array('x' => $kwargs['ship_pos_x'], 'y' => $kwargs['ship_pos_y']);
+        }
+        else {$this->_coord = array('x' => -1, 'y' => -1);}
+
+        //DIR
+        array_key_exists( 'ship_dir', $kwargs ) ? $this->_dir = $kwargs['ship_dir'] : $this->_dir = -1;
+		//COLOR
+        array_key_exists( 'ship_color', $kwargs ) ? $this->_color = $kwargs['ship_color'] : $this->_color = 'yellow';
+
+
+	 	//NAME
 		if (array_key_exists( 'name', $kwargs))
 			$this->_name = $kwargs['name'];
 		else
 			$this->_name = 'Default name';
+
 
 		//SIZE
 		if ($this->kwargsHasSize($kwargs))
@@ -57,45 +78,32 @@ class Ship implements INorme42 {
 		else
 			$this->_size = $this->getSizeFromArgs(0, 0);
 
+
 		//COLOR
         if (array_key_exists( 'color', $kwargs))
 			$this->_color == $kwargs['color'];
         else
         	$this->color = "black"; //css property
-
-		//USER_ID
-		array_key_exists( 'user_id', $kwargs ) ? $this->_uid = $kwargs['user_id'] : $this->_uid = 0;
-		//GAME_ID
-        array_key_exists( 'game_id', $kwargs ) ? $this->_gid = $kwargs['game_id'] : $this->_gid = 0;
-
 		//COORD
-		if (array_key_exists( 'coord', $kwargs)) {
-            $this->_coord = array('x' => $kwargs['coord']['x'], 'y' => $kwargs['coord']['y']);
-            $kwargs['coord']['x'] ? $this->_coord['x'] = $kwargs['coord']['x'] : $this->_coord['x'] = 0;
-            $kwargs['coord']['y'] ? $this->_coord['y'] = $kwargs['coord']['y'] : $this->_coord['y'] = 0;
-            $kwargs['coord']['dir'] ? $this->_coord['dir'] = $kwargs['coord']['dir'] : $this->_coord['y'] = 0;
-            $this->move();
-        }
-		else
-			$this->_coord = array('x' => 0 , 'y' => 0);
 	}
 
-	public function move(){
-	    $req = "UPDATE ship set ship_pos_x = $this->_coord['x'], ship_pos_y = $this->_coord['y'] WHERE ship_id=$this->_id";
-	    if ($this->_mysqli->query($req) === FALSE){
-	        echo "Error updating coord ship : ". $this->_mysqli();
-		}
+	public function updateDb($mysqli){
+	    $req = "UPDATE ship set ship_pos_x = ". $this->_coord['x'] . ", ship_pos_y = " . $this->_coord['y'] .  " WHERE ship_id= " . $this->_id;
+	    echo ($req);
+        $mysqli->query($req);
+	    /*if ($mysqli->query($req) === FALSE){
+	        echo "Error updating coord ship : ". $mysqli();
+		}*/
 	}
 
 	public function createShipInDb(){
-	    $req = "INSERT INTO ship(ship_id, ship_user_id, ship_game_id, ship_pos_x, ship_pos_y, ship_color)";
+/*	    $req = "INSERT INTO ship(ship_id, ship_user_id, ship_game_id, ship_pos_x, ship_pos_y, ship_color)";
         $req = $req ." VALUE($this->_id, $this->_uid, $this->ship_game, $this->_coord['x'], $this->_coord['y'], $this->_color)";
         if ($this->_mysqli->query($req) === FALSE){
             echo "Error INSERT ship : ". $this->_mysqli();
-        }
+        }*/
 	}
 	function __destruct (){
-		$this->_mysqli->close();
 	}
 }
 ?>

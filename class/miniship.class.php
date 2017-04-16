@@ -1,7 +1,7 @@
 <?php
 require_once 'Ship.class.php';
 //finalize
-Class miniship extends Ship
+Class Miniship extends Ship
 {
     private $_type;
 
@@ -21,10 +21,10 @@ Class miniship extends Ship
     function move()
     {
         parent::move();
-        $req = "UPDATE ship set ship_type = $this->_type WHERE ship_id=$this->_id";
+        /*$req = "UPDATE ship set ship_type = $this->_type WHERE ship_id=$this->_id";
         if ($this->_mysqli->query($req) === FALSE) {
             echo "Error updating coord ship : " . $this->_mysqli();
-        }
+        }*/
     }
 
     function __destruct()

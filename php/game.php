@@ -67,6 +67,7 @@ function mapPutPixel(x, y, color) {
             eraseShip(currentShip['ship_pos_x'],currentShip['ship_pos_y'], model[currentShip['ship_type']] , currentShip['ship_dir']);
             currentShip['ship_dir'] = (currentShip['ship_dir'] + 3) % 4;
             drawShip(currentShip['ship_pos_x'], currentShip['ship_pos_y'], model[currentShip['ship_type']], currentShip['ship_color'], currentShip['ship_dir']);
+
         });
 
         //RUGHT BUTTON
@@ -77,9 +78,20 @@ function mapPutPixel(x, y, color) {
             drawShip(currentShip['ship_pos_x'], currentShip['ship_pos_y'], model[currentShip['ship_type']], currentShip['ship_color'], currentShip['ship_dir']);
         });
 
+        function parseArrayToPost(array, type){
+            ret = type + "=true";
+            for (var key in array) {
+                if (array.hasOwnProperty(key)) {
+                    ret += "&" + key + "=" + array[key];
+                }
+            }
+            return (ret);
+        }
         //UP BUTTON
+        //data:"ship=true" + "&x=" + current['x'] + "&y=" + ships_data['y'] + "&ship_id= " + ships_data['ship_id'],
         $('#up_button').click(function(){
             eraseShip(currentShip['ship_pos_x'],currentShip['ship_pos_y'], model[currentShip['ship_type']] , currentShip['ship_dir']);
+            parseArrayToPost(currentShip);
             console.log ('ship _dir = ', currentShip['ship_dir']);
             switch (parseInt(currentShip['ship_dir'])){
                 case UP: currentShip['ship_pos_y']--;break;
@@ -91,9 +103,9 @@ function mapPutPixel(x, y, color) {
             $.ajax({
             url:"action.php",
             type:"post",
-            data:"ship=true" + "&x=" + ships_data['x'] + "&y=" + ships_data['y'] + "&ship_id= " + ships_data['ship_id'],
+            data:parseArrayToPost(currentShip, "ship"),
              success:function(msg){
-                 console.log ("log post",msg);
+                 console.log ("HERE IS RESULT ",msg);
             }
             });
             drawShip(currentShip['ship_pos_x'], currentShip['ship_pos_y'], model[currentShip['ship_type']], currentShip['ship_color'], currentShip['ship_dir']);
