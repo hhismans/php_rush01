@@ -94,7 +94,7 @@ class Ship implements INorme42 {
 	public function updateDb($mysqli){
 	    $req = "UPDATE ship set ship_pos_x = ". $this->_coord['x'] . ", ship_pos_y = " . $this->_coord['y'];
 	    $req = $req . ", ship_dir = " . $this->_dir . ", ship_pts_coque = " . $this->_hp . ", ship_shield=" . $this->_sp;
-        $req = $req . ", ship_color='" .$this->_color."'";
+        $req = $req . ", ship_color='" .$this->_color."', `ship_refresh_j1` = '0', `ship_refresh_j2` = '0'";
 	    $req = $req . " WHERE ship_id= " . $this->_id;
 	    echo ($req);
         $mysqli->query($req);

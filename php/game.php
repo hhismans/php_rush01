@@ -11,6 +11,7 @@ if(isset($_POST["create"]))
 {
     if ($_SESSION["game_id"] == "")
     {
+    	$_SESSION['nb_joueur'] = 1;
         $mysqli->query("INSERT INTO `game` (`game_user_id1`) VALUES ('".$_SESSION["id"]."')");
         $_SESSION["game_id"] = $mysqli->insert_id;
     }
@@ -19,6 +20,7 @@ else if($_POST["join"] != "")
 {
     if ($_SESSION["game_id"] == "")
     {
+    	$_SESSION['nb_joueur'] = 2;
         $mysqli->query("UPDATE `game` SET `game_user_id2` = '".$_SESSION['id']."', `game_lock` = '1' WHERE `game_id` = '".$_POST['join']."'");
         $stmt = $mysqli->prepare("SELECT `game_id` FROM `game` ORDER BY `game_id` DESC LIMIT 1");
         $stmt->execute();

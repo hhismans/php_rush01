@@ -85,9 +85,6 @@ $(document).ready(function() {
         }
     });
 
-
-
-
     function eraseShip(x, y, model, dir) {
         x = parseInt(x) + 1;
         y = parseInt(y);
@@ -214,13 +211,32 @@ $(document).ready(function() {
             }
         });
     }
+
+    function ajaxRefreshShip(handleData) {
+        $.ajax({
+            url: "action.php?action=refreshship",
+            type: "get",
+            success: function (msg) {
+                ships_data_new = JSON.parse(msg);
+                for (a = 0; a < ships_data.length; a++) {
+                    if (ships_data_new[a]["nb_jr"] == '0')
+                    {
+                        eraseShip(ships_data[a]['ship_pos_x'],ships_data[a]['ship_pos_y'], model[ships_data[a]['ship_type']] , ships_data[a]['ship_dir']);  
+                        drawShip(ships_data_new[a]['ship_pos_x'], ships_data_new[a]['ship_pos_y'], model[ships_data_new[a]['ship_type']], ships_data_new[a]['ship_color'], ships_data_new[a]['ship_dir']);
+                    }
+                }
+                ships_data = ships_data_new;
+                handleData(ships_data);
+            }
+        });
+    }
     ajaxGetShip(function (ships_data){
         currentShip = ships_data[current];
     });
 
     function qwe()
     {
-        ajaxGetShip(function (ships_data){
+        ajaxRefreshShip(function (ships_data){
         currentShip = ships_data[current];
     });
     }
