@@ -19,6 +19,7 @@ $(document).ready(function() {
     //LEFT BUTTON
     $('#left_button').click(function(){
         console.log ('LEFTCLICK BEFORE DIR:', currentShip['ship_dir']);
+        currentShip['ship_dir'] = parseInt(currentShip['ship_dir']);
         eraseShip(currentShip['ship_pos_x'],currentShip['ship_pos_y'], model[currentShip['ship_type']] , currentShip['ship_dir']);
         currentShip['ship_dir'] = (currentShip['ship_dir'] + 3) % 4;
         drawShip(currentShip['ship_pos_x'], currentShip['ship_pos_y'], model[currentShip['ship_type']], currentShip['ship_color'], currentShip['ship_dir']);
@@ -29,6 +30,7 @@ $(document).ready(function() {
     //RUGHT BUTTON
     $('#right_button').click(function(){
         console.log ('RIGHT BEFORE DIR:', currentShip['ship_dir']);
+        currentShip['ship_dir'] = parseInt(currentShip['ship_dir']);
         eraseShip(currentShip['ship_pos_x'],currentShip['ship_pos_y'], model[currentShip['ship_type']] , currentShip['ship_dir']);
         currentShip['ship_dir'] = (currentShip['ship_dir'] + 1) % 4;
         console.log("current ship dir", currentShip['ship_dir']);
@@ -63,17 +65,49 @@ $(document).ready(function() {
         drawShip(currentShip['ship_pos_x'], currentShip['ship_pos_y'], model[currentShip['ship_type']], currentShip['ship_color'], currentShip['ship_dir']);
     });
 
+    function find_next_current(index, ships){
+        count = 0;
+        if (index >= Object.keys(ships).length - 1) {
+            index = 0;
+        }
+        while (ships[index]['ship_user_id'] != ships['current_user_id'])
+        {
+            index++;
+            if (index >= Object.keys(ships).length - 1){
+                index = 0;
+            }
+            count ++;
+            if (count> Object.keys(ships).length)
+                return (-1);
+        }
+        return (index);
+    }
     //SUBMIT
     $('#submit_button').click(function(){
-        current+=1;
-        if (current < ships_data.length)
+        current = find_next_current(current + 1, ships_data);
+       /* current+=1;
+        if (current >= Object.keys(ships_data).length -1) {
+            current = 0;
+        }
+        count = 0;
+        console.log ("curent user ID AND ship user id", ships_data['current_user_id'], ships_data[current]['ship_user_id']);
+        while (ships_data[current]['ship_user_id'] == ships_data['current_user_id']) {
+            current += 1;
+            console.log('current', current);
+            if (current >= Object.keys(ships_data).length - 1)
+                current = 0;
+            count++;
+            if (count > Object.keys(ships_data).length)
+                return;
+        }*/
+       /* if (current < Object.keys(ships_data).length)
             currentShip = ships_data[current];
         else
         {
             current=0;
             currentShip = ships_data[0];
             console.log('end of ship');
-        }
+        }*/
         $.ajax({
             url:"action.php",
             type:"post",
@@ -203,7 +237,8 @@ $(document).ready(function() {
             type: "get",
             success: function (msg) {
                 ships_data = JSON.parse(msg);
-                for (a = 0; a < ships_data.length; a++) {
+                for (a = 0; a < Object.keys(ships_data).length - 1; a++) {
+                    console.log("PROUUUTEUU");
                     drawShip(ships_data[a]['ship_pos_x'], ships_data[a]['ship_pos_y'], model[ships_data[a]['ship_type']], ships_data[a]['ship_color'], ships_data[a]['ship_dir']);
                 }
                 handleData(ships_data);
@@ -217,12 +252,13 @@ $(document).ready(function() {
             type: "get",
             success: function (msg) {
                 ships_data_new = JSON.parse(msg);
+                //console.log(msg);
                 test = 0;
-                for (a = 0; a < ships_data.length; a++) {
+                for (a = 0; a < Object.keys(ships_data).length - 1; a++) {
                     if (ships_data_new[a]["nb_jr"] == '0')
                     {
                         test = 1;
-                        console.log ("AJAX RQUEST DONE");
+                        console.log ("AJAX RQUEST DONE", ships_data_new);
                         eraseShip(ships_data[a]['ship_pos_x'],ships_data[a]['ship_pos_y'], model[ships_data[a]['ship_type']] , ships_data[a]['ship_dir']);  
                         drawShip(ships_data_new[a]['ship_pos_x'], ships_data_new[a]['ship_pos_y'], model[ships_data_new[a]['ship_type']], ships_data_new[a]['ship_color'], ships_data_new[a]['ship_dir']);
                     }
@@ -243,6 +279,19 @@ $(document).ready(function() {
         currentShip = ships_data[current];
     });
     }
+
+     $.ajax({
+            url: "action.php?action=getship",
+            type: "get",
+            success: function (msg) {
+                ships_data = JSON.parse(msg);
+                console.log("HEY!", Object.keys(ships_data).length, ships_data);
+                current = find_next_current(current, ships_data);
+                for (a = 0; a < Object.keys(ships_data).length - 1; a++) {
+                        drawShip(ships_data[a]['ship_pos_x'], ships_data[a]['ship_pos_y'], model[ships_data[a]['ship_type']], ships_data[a]['ship_color'], ships_data[a]['ship_dir']);
+                }
+            }
+        });
     setInterval(qwe,1000);
 });
 

@@ -84,11 +84,6 @@ class Ship implements INorme42 {
 			$this->_size = $this->getSizeFromArgs(0, 0);
 
 
-		//COLOR
-        if (array_key_exists( 'color', $kwargs))
-			$this->_color == $kwargs['color'];
-        else
-        	$this->_color = "black"; //css property
 		//COORD
 	}
 

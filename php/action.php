@@ -13,6 +13,7 @@ if (isset($_GET['action'])) {
         while ($row = $query->fetch_array(MYSQLI_ASSOC)) {
             $ret[] = $row;
         }
+        $ret['current_user_id'] = $_SESSION['id'];
         //$stmt->bind_result($coordX, $coordY, $type);
         //$stmt->fetch_array();
         echo json_encode($ret);
@@ -26,6 +27,7 @@ if (isset($_GET['action'])) {
         while ($row = $query->fetch_array(MYSQLI_ASSOC)) {
             $ret[] = $row;
         }
+        $ret['current_user_id'] = $_SESSION['id'];
         $mysqli->query("UPDATE `ship` SET `ship_refresh_j".$_SESSION['nb_joueur']."` = '1' WHERE ship_game_id='1' AND `ship_refresh_j".$_SESSION['nb_joueur']."` = 0");
         echo json_encode($ret);
         exit();
