@@ -63,6 +63,10 @@ class Ship implements INorme42 {
         array_key_exists( 'ship_dir', $kwargs ) ? $this->_dir = $kwargs['ship_dir'] : $this->_dir = -1;
 		//COLOR
         array_key_exists( 'ship_color', $kwargs ) ? $this->_color = $kwargs['ship_color'] : $this->_color = 'yellow';
+        //SHIP_PTS_COQUE
+        array_key_exists( 'ship_pts_coque', $kwargs ) ? $this->_hp = $kwargs['ship_pts_coque'] : $this->_hp = 0;
+        //SHIP_SHIELD
+        array_key_exists( 'ship_shield', $kwargs ) ? $this->_sp = $kwargs['ship_shield'] : $this->_sp = 0;
 
 
 	 	//NAME
@@ -88,7 +92,10 @@ class Ship implements INorme42 {
 	}
 
 	public function updateDb($mysqli){
-	    $req = "UPDATE ship set ship_pos_x = ". $this->_coord['x'] . ", ship_pos_y = " . $this->_coord['y'] .  " WHERE ship_id= " . $this->_id;
+	    $req = "UPDATE ship set ship_pos_x = ". $this->_coord['x'] . ", ship_pos_y = " . $this->_coord['y'];
+	    $req = $req . ", ship_dir = " . $this->_dir . ", ship_pts_coque = " . $this->_hp . ", ship_shield=" . $this->_sp;
+        $req = $req . ", ship_color='" .$this->_color."'";
+	    $req = $req . " WHERE ship_id= " . $this->_id;
 	    echo ($req);
         $mysqli->query($req);
 	    /*if ($mysqli->query($req) === FALSE){
