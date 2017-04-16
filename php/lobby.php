@@ -7,6 +7,7 @@ if ($_SESSION["id"] == "")
 	header("location: ../index.php");
 	return;
 }
+echo $_SESSION["game_id"]."btebtrbntrtnbrn";
 ?>
 <!DOCTYPE html>
 <html>
