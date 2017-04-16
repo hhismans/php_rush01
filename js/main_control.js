@@ -217,6 +217,14 @@ $(document).ready(function() {
     ajaxGetShip(function (ships_data){
         currentShip = ships_data[current];
     });
+
+    function qwe()
+    {
+        ajaxGetShip(function (ships_data){
+        currentShip = ships_data[current];
+    });
+    }
+    setInterval(qwe,1000);
 });
 
 function ecri()
