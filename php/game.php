@@ -1,22 +1,45 @@
 <?PHP
 session_start();
-require_once('../class/App.class.php');
 include('connexion.php');
-
 if ($_SESSION["id"] == "")
 {
 	header("location: ../index.php");
 	return;
 }
-?>
 
-<?php
-//$var = json_decode(file_get_contents("data.json"));
-//$ship = new miniship(array('dataObj' => $var));
+if(isset($_POST["create"]))
+{
+	if ($_SESSION["game_id"] == "")
+	{
+		$mysqli->query("INSERT INTO `game` (`game_user_id1`) VALUES ('".$_SESSION["id"]."')");
+		$_SESSION["game_id"] = $mysqli->insert_id;
+	}
+}
+else if($_POST["join"] != "")
+{
+	if ($_SESSION["game_id"] == "")
+	{
+		$mysqli->query("UPDATE `game` SET `game_user_id2` = '".$_SESSION['id']."', `game_lock` = '1' WHERE `game_id` = '".$_POST['join']."'");
+		$stmt = $mysqli->prepare("SELECT `game_id` FROM `game` ORDER BY `game_id` DESC LIMIT 1");
+		$stmt->execute();
+		$stmt->bind_result($id);
+		$stmt->fetch();
+		$_SESSION["game_id"] = $id;
+
+	}
+}
+if($_SESSION["game_id"] == "")
+{
+	header("location: lobby.php");
+	return;
+}
+require_once('../class/App.class.php');
 $_SESSION['app'] = new App(array());
 $_SESSION['app']->dumpHtml();
 ?>
 <html>
+<meta charset="UTF-8">
+<title>game</title>
 <link rel='stylesheet' type='text/css' href='../css/style.css'></link>
 <script src='../js/jquery-3.2.1.min.js'></script>
 <body>
@@ -225,10 +248,15 @@ function mapPutPixel(x, y, color) {
 
 function ecri()
 {
-	$.post("req_chat.php", { text: $("#msg").val()});
+	$.post("req_php.php?page=game", { text: $("#msg").val()});
 	$("#msg").val("");
 }
 
+$(document).keypress(function (e) {
+                if (e.which == 13 || event.keyCode == 13) {
+                    ecri();
+                }
+            });
 </script>
 <div id="stat">
 <?php
@@ -270,8 +298,8 @@ echo "<h3>".$_SESSION["login"]." VS j2</h3>
 		<input id ="left_button" class="left" type="submit" value="LEFT" name="move">
 		<input id="right_button" type="submit" value="RIGHT" name="move">
 	</div>
-	<input id="submit_button" type="submit" value="SUBMIT" name="move">
-	</div>
+	<input id="down_button" type="submit" value="DOWN" name="move">
+</div>
 <div id="div_chat">
 	<iframe name='chat' src='chat.php' width="100%" height="100%"></iframe>
 	<div id="div_text"><input type='text' id='msg' value="" align="right"/><input type='submit' id="chat_ok" onclick="ecri()" value='OK' /></div>

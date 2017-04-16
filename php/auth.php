@@ -1,7 +1,7 @@
 <?PHP
 session_start();
 include('connexion.php');
-if (($_POST["login"] != "" && $_POST["passwd"] != "") || $_SESSION["login"] != "")
+if ($_POST["login"] != "" && $_POST["passwd"] != "")
 {
 	$stmt = $mysqli->prepare("SELECT COUNT(`user_id`), `user_login`, `user_id` FROM `user` WHERE user_login=? AND user_pass=? GROUP BY `user_id`");
 	$stmt->bind_param("ss", $_POST["login"], hash("whirlpool", $_POST["passwd"]));
@@ -12,13 +12,12 @@ if (($_POST["login"] != "" && $_POST["passwd"] != "") || $_SESSION["login"] != "
 	{
 		$_SESSION["login"] = $login;
 		$_SESSION["id"] = $id;
-		header("location: login.php");
+		header("location: lobby.php");
 		return;
 	}
 }
 $_SESSION["login"] = "";
 $_SESSION["id"] = "";
-	echo "SELECT COUNT(`user_id`), `user_login`, `user_id` FROM `user` WHERE user_login=".$_POST["login"]." AND user_pass=".hash("whirlpool", $_POST["passwd"])." GROUP BY `user_id`<br />";
-//header("location: ../index.php");
+header("location: ../index.php");
 return;
 ?>
