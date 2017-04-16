@@ -179,7 +179,6 @@ $_SESSION['app']->dumpHtml();
                     for (j = 0; j < model[i].length; j++) {
                         if (model[i][j] == '#')
                         {
-                            console.log ("in down ", x, y)
                             mapPutPixel(x - Math.floor((model[0].length / 2)) + j, y - Math.floor((model.length / 2)) + i, color);
                         }
                     }
@@ -257,24 +256,27 @@ $_SESSION['app']->dumpHtml();
                         drawShip(ships_data[a]['ship_pos_x'], ships_data[a]['ship_pos_y'], model[ships_data[a]['ship_type']], ships_data[a]['ship_color'], ships_data[a]['ship_dir']);
                     }
                     handleData(ships_data);
+                    //setInterval(function() {ajaxGetShip();}, );
                 }
             });
         }
-        ajaxGetShip(function (ships_data){
+
+        	ajaxGetShip(function (ships_data){
             currentShip = ships_data[current];
-        });
-    });
+        	});
 
-    function ecri()
-    {
-        $.post("req_php.php?page=game", { text: $("#msg").val()});
-        $("#msg").val("");
-    }
 
-    $(document).keypress(function (e) {
-        if (e.which == 13 || event.keyCode == 13) {
-            ecri();
-        }
+	    function ecri()
+	    {
+	        $.post("req_php.php?page=game", { text: $("#msg").val()});
+	        $("#msg").val("");
+	    }
+
+	    $(document).keypress(function (e) {
+	        if (e.which == 13 || event.keyCode == 13) {
+	            ecri();
+	        }});
+
     });
 </script>
 <div id="stat">
