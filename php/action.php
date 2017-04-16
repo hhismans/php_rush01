@@ -26,7 +26,7 @@ if (isset($_GET['action'])) {
         while ($row = $query->fetch_array(MYSQLI_ASSOC)) {
             $ret[] = $row;
         }
-        //$mysqli->query("UPDATE `ship` SET `ship_refresh_j".$_SESSION['nb_joueur']."` = '1' WHERE ship_game_id='1' AND `ship_refresh_j".$_SESSION['nb_joueur']."` = 0");
+        $mysqli->query("UPDATE `ship` SET `ship_refresh_j".$_SESSION['nb_joueur']."` = '1' WHERE ship_game_id='1' AND `ship_refresh_j".$_SESSION['nb_joueur']."` = 0");
         echo json_encode($ret);
         exit();
     }
